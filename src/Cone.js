@@ -79,6 +79,7 @@ Object.assign( Cone.prototype, {
 
 } );
 
+THREE.Cone = Cone;
 
 /**
  *
@@ -91,13 +92,9 @@ Object.assign( Cone.prototype, {
  *      inf >= 0 all points P such that Dot(axis,P-v) < inf are not considered in the cone
  *      sup > 0 all points P such that Dot(axis,P-v) > sup are not considered in the cone
  *
- * @return {number} The number of intersections and fill res with :
- * @param {!Object} start Ray starting point
- * @param {!Object} dir Ray direction >> Edit seems it needs to be normalized
- * @param {!Object} res Resulting intersections in :
- *      res.inter_t     array containing 0,1 or 2 scalar t such that start + t*dir are intersection points. I'm not sure if any assumption can be made on the order of thoses values.
- *      res.inter_p     points of intersection
- *      res.inter_dot   values such that <(inter_p - cone.v) | cone.axis> = inter_dot
+ * @param {!Ray} ray
+ * @param {!Vector3} target Where to save the resulting hit point, if any.
+ * @return {Vector3} The first hit point if any, null otherwise.
  *
  */
 THREE.Ray.prototype.intersectCone = (function()
@@ -105,7 +102,7 @@ THREE.Ray.prototype.intersectCone = (function()
     // static variables for the function
     var E = new THREE.Vector3();
 
-    return function(cone, start, dir, res)
+    return function(cone, target)
     {
         // Set up the quadratic Q(t) = c2*t^2 + 2*c1*t + c0 that corresponds to
         // the cone.  Let the vertex be V, the unit-length direction vector be A,
@@ -122,20 +119,16 @@ THREE.Ray.prototype.intersectCone = (function()
         // Q(t) = 0 must be tested for Dot(A,L(t)-V) >= 0.
 
         var cos_angle = cone.cosTheta;
-        var AdD = cone.axis.dot(dir);
+        var AdD = cone.axis.dot(this.direction);
         var cos_sqr = cos_angle*cos_angle;
-        E.subVectors(start,cone.v);
+        E.subVectors(this.origin,cone.v);
         var AdE = cone.axis.dot(E);
-        var DdE = dir.dot(E);
+        var DdE = this.direction.dot(E);
         var EdE = E.dot(E);
         var c2 = AdD*AdD - cos_sqr;
         var c1 = AdD*AdE - cos_sqr*DdE;
         var c0 = AdE*AdE - cos_sqr*EdE;
         var dot;
-
-        res.inter_p = {};
-        res.inter_t = {};
-        res.inter_dot = {};
 
         // Solve the quadratic.  Keep only those X for which Dot(A,X-V) >= 0.
         if (Math.abs(c2) >= 0)
@@ -159,28 +152,22 @@ THREE.Ray.prototype.intersectCone = (function()
                 var quantity = 0;
 
                 var t = (-c1 - root)*invC2;
-                res.inter_t[quantity] = t;
-                res.inter_p[quantity] = new THREE.Vector3(start.x + t*dir.x,
-                                                          start.y + t*dir.y,
-                                                          start.z + t*dir.z);
-                E.subVectors(res.inter_p[quantity],cone.v);
+                ray.at(t,target);
+
+                E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
                 if (dot > cone.inf && dot < cone.sup)
                 {
-                    res.inter_dot[quantity] = dot;
                     quantity++;
                 }
 
                 t = (-c1 + root)*invC2;
-                res.inter_t[quantity] = t;
-                res.inter_p[quantity] = new THREE.Vector3(start.x + t*dir.x,
-                                                          start.y + t*dir.y,
-                                                          start.z + t*dir.z);
-                E.subVectors(res.inter_p[quantity],cone.v);
+                ray.at(t,target);
+
+                E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
                 if (dot>cone.inf && dot<cone.sup)
                 {
-                    res.inter_dot[quantity] = dot;
                     quantity++;
                 }
 
@@ -188,39 +175,37 @@ THREE.Ray.prototype.intersectCone = (function()
                 {
                     // The line intersects the single-sided cone in front of the
                     // vertex twice.
-                    return 2;
+                    return target;
                 }
                 else if (quantity == 1)
                 {
                     // The line intersects the single-sided cone in front of the
                     // vertex once.  The other intersection is with the
                     // single-sided cone behind the vertex.
-                    return 1;
+                    return target;
                 }
                 else
                 {
                     // The line intersects the single-sided cone behind the vertex
                     // twice.
-                    return 0;
+                    return null;
                 }
             }
             else
             {
                 // One repeated real root (line is tangent to the cone).
-                res.inter_t[0] = c1/c2;
-                res.inter_p[0] = new THREE.Vector3( start.x - res.inter_t[0]*dir.x,
-                                                    start.y - res.inter_t[0]*dir.y,
-                                                    start.z - res.inter_t[0]*dir.z);
-                E.subVectors(res.inter_p[0],cone.v);
+                var t  = c1/c2;
+                ray.at(t,target);
+
+                E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
                 if ( dot > cone.inf && dot < cone.sup)
                 {
-                    res.inter_dot[0] = dot;
-                    return 1;
+                    return target;
                 }
                 else
                 {
-                    return 0;
+                    return null;
                 }
             }
         }
@@ -228,20 +213,18 @@ THREE.Ray.prototype.intersectCone = (function()
         {
             // c2 = 0, c1 != 0 (D is a direction vector on the cone boundary)
 
-            res.inter_t[0] = 0.5*c0/c1;
-            res.inter_p[0] = new THREE.Vector3( start.x - res.inter_t[0]*dir.x,
-                                                start.y - res.inter_t[0]*dir.y,
-                                                start.z - res.inter_t[0]*dir.z);
-            E.subVectors(res.inter_p[0],cone.v);
+            var t = 0.5*c0/c1;
+            ray.at(t,target);
+
+            E.subVectors(target,cone.v);
             dot = E.dot(cone.axis);
             if (dot > cone.inf && dot < cone.sup)
             {
-                res.inter_dot[0] = dot;
-                return 1;
+                return target;
             }
             else
             {
-                return 0;
+                return null;
             }
         }
         else
@@ -250,7 +233,7 @@ THREE.Ray.prototype.intersectCone = (function()
             // OR
             // c2 = c1 = c0 = 0, cone contains ray V+t*D where V is cone vertex
             // and D is the line direction.
-            return 0;
+            return null;
         }
     };
 })();

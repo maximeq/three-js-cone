@@ -30,7 +30,7 @@ build({
     external: [ 'three-full/builds/Three.cjs.js' ],
 }, {
     format: 'umd',
-    name: 'THREEDisposer',
+    name: 'THREECone',
     file: './dist/browser/three-js-cone.js',
     globals: {
         'three-full/builds/Three.cjs.js' : 'THREE'
@@ -58,7 +58,7 @@ build({
     external: [ 'three-full/builds/Three.cjs.js' ],
 }, {
     format: 'umd',
-    name: 'THREEDisposer',
+    name: 'THREECone',
     file: './dist/browser/three-js-cone.min.js',
     globals: {
         'three-full/builds/Three.cjs.js' : 'THREE'
