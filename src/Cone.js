@@ -92,7 +92,6 @@ THREE.Cone = Cone;
  *      inf >= 0 all points P such that Dot(axis,P-v) < inf are not considered in the cone
  *      sup > 0 all points P such that Dot(axis,P-v) > sup are not considered in the cone
  *
- * @param {!Ray} ray
  * @param {!Vector3} target Where to save the resulting hit point, if any.
  * @return {Vector3} The first hit point if any, null otherwise.
  *
@@ -152,7 +151,7 @@ THREE.Ray.prototype.intersectCone = (function()
                 var quantity = 0;
 
                 var t = (-c1 - root)*invC2;
-                ray.at(t,target);
+                this.at(t,target);
 
                 E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
@@ -162,7 +161,7 @@ THREE.Ray.prototype.intersectCone = (function()
                 }
 
                 t = (-c1 + root)*invC2;
-                ray.at(t,target);
+                this.at(t,target);
 
                 E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
@@ -195,7 +194,7 @@ THREE.Ray.prototype.intersectCone = (function()
             {
                 // One repeated real root (line is tangent to the cone).
                 var t  = c1/c2;
-                ray.at(t,target);
+                this.at(t,target);
 
                 E.subVectors(target,cone.v);
                 dot = E.dot(cone.axis);
@@ -214,7 +213,7 @@ THREE.Ray.prototype.intersectCone = (function()
             // c2 = 0, c1 != 0 (D is a direction vector on the cone boundary)
 
             var t = 0.5*c0/c1;
-            ray.at(t,target);
+            this.at(t,target);
 
             E.subVectors(target,cone.v);
             dot = E.dot(cone.axis);
