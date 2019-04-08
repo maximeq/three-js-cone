@@ -237,4 +237,4 @@ THREE.Ray.prototype.intersectCone = (function()
     };
 })();
 
-export { Cone };
+module.exports = Cone;

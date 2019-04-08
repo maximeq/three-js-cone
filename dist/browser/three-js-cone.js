@@ -1,13 +1,13 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.THREECone = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('three-full/builds/Three.cjs.js')) :
+    typeof define === 'function' && define.amd ? define(['three-full/builds/Three.cjs.js'], factory) :
+    (global.THREECone = factory(global.THREE));
+}(this, (function (Three_cjs) { 'use strict';
 
-    const THREE = require("three-full/builds/Three.cjs.js");
+    Three_cjs = Three_cjs && Three_cjs.hasOwnProperty('default') ? Three_cjs['default'] : Three_cjs;
 
-    const Box3 = THREE.Box3;
-    const Vector3 = THREE.Vector3;
+    const Box3 = Three_cjs.Box3;
+    const Vector3 = Three_cjs.Vector3;
 
     /**
      *  @param {Vector3} v The cone origin
@@ -18,8 +18,8 @@
      */
     function Cone( v, axis, theta, inf, sup ) {
 
-    	this.v = v || new THREE.Vector3();
-        this.axis = axis  || new THREE.Vector3(1,0,0);
+    	this.v = v || new Three_cjs.Vector3();
+        this.axis = axis  || new Three_cjs.Vector3(1,0,0);
         this.theta = theta;
         this.inf = inf || 0;
         this.sup = sup || +Infinity;
@@ -85,7 +85,7 @@
 
     } );
 
-    THREE.Cone = Cone;
+    Three_cjs.Cone = Cone;
 
     /**
      *
@@ -102,10 +102,10 @@
      * @return {Vector3} The first hit point if any, null otherwise.
      *
      */
-    THREE.Ray.prototype.intersectCone = (function()
+    Three_cjs.Ray.prototype.intersectCone = (function()
     {
         // static variables for the function
-        var E = new THREE.Vector3();
+        var E = new Three_cjs.Vector3();
 
         return function(cone, target)
         {
@@ -243,8 +243,8 @@
         };
     })();
 
-    exports.Cone = Cone;
+    var Cone_1 = Cone;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Cone_1;
 
 })));
