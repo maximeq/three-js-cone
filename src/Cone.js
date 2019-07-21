@@ -138,7 +138,7 @@ THREE.Ray.prototype.intersectCone = (function()
             {
                 // Q(t) = 0 has no real-valued roots.  The line does not
                 // intersect the double-sided cone.
-                return 0;
+                return null;
             }
             else if (discr > 0)
             {
