@@ -106,6 +106,7 @@
     {
         // static variables for the function
         var E = new Three_cjs.Vector3();
+        var target2 = new Three_cjs.Vector3();
 
         return function(cone, target)
         {
@@ -157,23 +158,28 @@
                     var quantity = 0;
 
                     var t = (-c1 - root)*invC2;
-                    this.at(t,target);
+                    if(t>0){
+                        this.at(t,target);
 
-                    E.subVectors(target,cone.v);
-                    dot = E.dot(cone.axis);
-                    if (dot > cone.inf && dot < cone.sup)
-                    {
-                        quantity++;
+                        E.subVectors(target,cone.v);
+                        dot = E.dot(cone.axis);
+                        if (dot > cone.inf && dot < cone.sup)
+                        {
+                            quantity++;
+                        }
                     }
 
-                    t = (-c1 + root)*invC2;
-                    this.at(t,target);
+                    var t2 = (-c1 + root)*invC2;
+                    if(t2>0 && t2 < t1){
+                        this.at(t2,target2);
 
-                    E.subVectors(target,cone.v);
-                    dot = E.dot(cone.axis);
-                    if (dot>cone.inf && dot<cone.sup)
-                    {
-                        quantity++;
+                        E.subVectors(target2,cone.v);
+                        dot = E.dot(cone.axis);
+                        if (dot>cone.inf && dot<cone.sup)
+                        {
+                            quantity++;
+                            target.copy(target2);
+                        }
                     }
 
                     if (quantity == 2)
