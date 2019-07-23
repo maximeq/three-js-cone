@@ -1,6 +1,6 @@
 {
   "name": "three-js-cone",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "THREE.JS Cone class, on the model of THREE.Sphere class.",
   "main": "src/Cone.js",
   "scripts": {
