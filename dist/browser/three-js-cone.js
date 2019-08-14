@@ -170,7 +170,7 @@
                     }
 
                     var t2 = (-c1 + root)*invC2;
-                    if(t2>0 && t2 < t1){
+                    if(t2>0 && t2 < t){
                         this.at(t2,target2);
 
                         E.subVectors(target2,cone.v);
