@@ -27,13 +27,13 @@ async function build(inputOptions, outputOptions) {
 build({
     input: 'src/Cone.js',
     plugins:  [ commonjs(), resolve() ],
-    external: [ 'three-full/builds/Three.cjs.js' ],
+    external: [ 'three-full' ],
 }, {
     format: 'umd',
     name: 'THREECone',
     file: './dist/browser/three-js-cone.js',
     globals: {
-        'three-full/builds/Three.cjs.js' : 'THREE'
+        'three-full' : 'THREE'
     }
 });
 
@@ -55,13 +55,13 @@ build({
           bracketSpacing:false
         })
     ],
-    external: [ 'three-full/builds/Three.cjs.js' ],
+    external: [ 'three-full' ],
 }, {
     format: 'umd',
     name: 'THREECone',
     file: './dist/browser/three-js-cone.min.js',
     globals: {
-        'three-full/builds/Three.cjs.js' : 'THREE'
+        'three-full' : 'THREE'
     }
 });
 

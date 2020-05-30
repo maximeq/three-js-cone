@@ -1,13 +1,13 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('three-full/builds/Three.cjs.js')) :
-    typeof define === 'function' && define.amd ? define(['three-full/builds/Three.cjs.js'], factory) :
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('three-full')) :
+    typeof define === 'function' && define.amd ? define(['three-full'], factory) :
     (global.THREECone = factory(global.THREE));
-}(this, (function (Three_cjs) { 'use strict';
+}(this, (function (threeFull) { 'use strict';
 
-    Three_cjs = Three_cjs && Three_cjs.hasOwnProperty('default') ? Three_cjs['default'] : Three_cjs;
+    threeFull = threeFull && threeFull.hasOwnProperty('default') ? threeFull['default'] : threeFull;
 
-    const Box3 = Three_cjs.Box3;
-    const Vector3 = Three_cjs.Vector3;
+    const Box3 = threeFull.Box3;
+    const Vector3 = threeFull.Vector3;
 
     /**
      *  @param {Vector3} v The cone origin
@@ -18,8 +18,8 @@
      */
     function Cone( v, axis, theta, inf, sup ) {
 
-    	this.v = v || new Three_cjs.Vector3();
-        this.axis = axis  || new Three_cjs.Vector3(1,0,0);
+    	this.v = v || new threeFull.Vector3();
+        this.axis = axis  || new threeFull.Vector3(1,0,0);
         this.theta = theta;
         this.inf = inf || 0;
         this.sup = sup || +Infinity;
@@ -85,7 +85,7 @@
 
     } );
 
-    Three_cjs.Cone = Cone;
+    threeFull.Cone = Cone;
 
     /**
      *
@@ -102,11 +102,11 @@
      * @return {Vector3} The first hit point if any, null otherwise.
      *
      */
-    Three_cjs.Ray.prototype.intersectCone = (function()
+    threeFull.Ray.prototype.intersectCone = (function()
     {
         // static variables for the function
-        var E = new Three_cjs.Vector3();
-        var target2 = new Three_cjs.Vector3();
+        var E = new threeFull.Vector3();
+        var target2 = new threeFull.Vector3();
 
         return function(cone, target)
         {
