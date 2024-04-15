@@ -1,3 +1,8 @@
+# DEPRECATED
+
+This code has been moved to `three-js-extra-public`.
+Don't use or modify this repository.
+
 # three-js-cone
 A three.js Cone class (like THREE.Sphere).
 
